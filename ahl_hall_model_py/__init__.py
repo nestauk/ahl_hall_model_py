@@ -30,7 +30,7 @@ def adult_weight(
         na_change: Change in sodium intake (mmol/day) over time.
         days: Total simulation days.
         dt: Time step (days).
-        **kwargs: Additional parameters like PAL, pcarb, EI, fat, etc.
+        **kwargs: Additional parameters like pal, pcarb, ei, fat, etc.
 
     Returns:
         A dictionary with time-series data of body weight and related metrics.
@@ -65,11 +65,11 @@ def adult_weight(
 
     ei_cpp = ei_change.T.tolist()
     na_cpp = na_change.T.tolist()
-    pal = np.full(n_ind, kwargs.get("PAL", 1.5)).astype(float)
+    pal = np.full(n_ind, kwargs.get("pal", 1.5)).astype(float)
     pcarb = np.full(n_ind, kwargs.get("pcarb", 0.5)).astype(float)
     pcarb_base = np.full(n_ind, kwargs.get("pcarb_base", 0.5)).astype(float)
 
-    if "EI" in kwargs and "fat" in kwargs:
+    if "ei" in kwargs and "fat" in kwargs:
         return _core.adult_weight_wrapper_EI_fat(
             bw.tolist(),
             ht.tolist(),
@@ -81,14 +81,14 @@ def adult_weight(
             pcarb_base.tolist(),
             pcarb.tolist(),
             dt,
-            np.atleast_1d(kwargs["EI"]).astype(float).tolist(),
+            np.atleast_1d(kwargs["ei"]).astype(float).tolist(),
             np.atleast_1d(kwargs["fat"]).astype(float).tolist(),
             days,
             True,
         )
-    elif "EI" in kwargs or "fat" in kwargs:
-        is_energy = "EI" in kwargs
-        extradata = np.atleast_1d(kwargs["EI"]) if is_energy else np.atleast_1d(kwargs["fat"])
+    elif "ei" in kwargs or "fat" in kwargs:
+        is_energy = "ei" in kwargs
+        extradata = np.atleast_1d(kwargs["ei"]) if is_energy else np.atleast_1d(kwargs["fat"])
         return _core.adult_weight_wrapper_EI(
             bw.tolist(),
             ht.tolist(),
