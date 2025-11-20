@@ -36,10 +36,10 @@ f_bw_base = adult_weight(bw=80, ht=1.8, age=40, sex="female")
 print(f"Baseline Final Weight: {f_bw_base['Body_Weight'][0, -1]:.2f} kg")
 
 days = 365
-EI_change = np.full(days, -250)
-NA_change = np.full(days, -20)
+ei_change = np.full(days, -250)
+na_change = np.full(days, -20)
 
-f_diet = adult_weight(80, 1.8, 40, "female", EIchange=EI_change, NAchange=NA_change)
+f_diet = adult_weight(80, 1.8, 40, "female", ei_change=ei_change, na_change=na_change)
 print(f"Diet Final Weight: {f_diet['Body_Weight'][0, -1]:.2f} kg")
 plot_model(f_diet, "Body_Weight", "Female Diet (-250kcal)")
 
@@ -90,7 +90,7 @@ print("Calculating weight models for all interpolations...")
 
 for mode, color in interpolations:
     # Run model: bw=70, ht=1.75, age=22, male, days=730
-    res = adult_weight(70, 1.75, 22, "male", EIchange=ei_curves[mode], days=730)
+    res = adult_weight(70, 1.75, 22, "male", ei_change=ei_curves[mode], days=730)
 
     weight_traj = res["Body_Weight"][0]  # Extract trajectory for individual 0
 
@@ -117,7 +117,7 @@ energy_changes = [-150, -100, 50, -200, 0]
 pop_measures = np.column_stack((np.zeros(5), energy_changes))
 pop_times = [0, 365]
 pop_ei = energy_build(pop_measures, pop_times, interpolation="Linear")
-pop_model = adult_weight(weights, heights, ages, sexes, EIchange=pop_ei, days=365)
+pop_model = adult_weight(weights, heights, ages, sexes, ei_change=pop_ei, days=365)
 
 print("Population Final Weights:")
 print(pop_model["Body_Weight"][:, -1])
