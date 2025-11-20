@@ -14,7 +14,11 @@ description = "A Python wrapper for the R `bw` package Hall model C++ implementa
 requires-python = ">=3.8"
 readme = "README.md"
 license = "MIT"
-dependencies = ["matplotlib>=3.7.5", "numpy>=1.24.4"]
+dependencies = [
+    "matplotlib>=3.7.5",
+    "numpy>=1.24.4",
+    "polars>=1.8.2",
+]
 
 [project.urls]
 repository = "https://github.com/nestauk/ahl_hall_model_py"
