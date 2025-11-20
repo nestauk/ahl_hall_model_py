@@ -123,7 +123,7 @@ def adult_weight(
 
 
 def energy_build(
-    energy: list[float] | np.ndarray | list[list[float]] | np.ndarray,
+    energy: list[float] | list[list[float]] | np.ndarray,
     time: list[float] | np.ndarray,
     interpolation: str = "Brownian",
 ) -> np.ndarray:
