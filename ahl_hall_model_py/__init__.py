@@ -8,10 +8,10 @@ set_seed = _core.set_seed
 
 
 def adult_weight(
-    bw: float | int | list[float] | list[int],
-    ht: float | int | list[float] | list[int],
-    age: float | int | list[float] | list[int],
-    sex: str | list[str],
+    bw: float | int | list[float] | list[int] | np.ndarray,
+    ht: float | int | list[float] | list[int] | np.ndarray,
+    age: float | int | list[float] | list[int] | np.ndarray,
+    sex: str | list[str] | np.ndarray,
     ei_change: list[float] | np.ndarray | None = None,
     na_change: list[float] | np.ndarray | None = None,
     days: int = 365,
