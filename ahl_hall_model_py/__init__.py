@@ -6,7 +6,6 @@ set_seed = _core.set_seed
 
 
 def adult_weight(bw, ht, age, sex, EIchange=None, NAchange=None, days=365, dt=1.0, **kwargs):
-    # ... (same as previous) ...
     bw = np.atleast_1d(bw).astype(float)
     ht = np.atleast_1d(ht).astype(float)
     age = np.atleast_1d(age).astype(float)
