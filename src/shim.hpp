@@ -17,9 +17,30 @@ struct Slice
 };
 static const Slice _;
 
-// --- 1. Forward Declarations ---
-class NumericVector;
-class NumericMatrix;
+// --- 1. RNG Control (NEW) ---
+// Singleton pattern for the generator so it's shared across all C++ files
+inline std::mt19937 &get_rng()
+{
+    // Initialize with a random seed by default
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    return gen;
+}
+
+// Exposed function to set the seed
+inline void set_seed(int seed)
+{
+    get_rng().seed(seed);
+}
+
+// R replacement: rnorm
+inline void fill_rnorm(double *ptr, size_t n, double mean = 0.0, double sd = 1.0)
+{
+    std::normal_distribution<> d(mean, sd);
+    auto &gen = get_rng();
+    for (size_t i = 0; i < n; ++i)
+        ptr[i] = d(gen);
+}
 
 // --- 2. NumericVector ---
 class NumericVector : public std::vector<double>
@@ -35,12 +56,19 @@ public:
     double operator()(size_t i) const { return (*this)[i]; }
     void fill(double v) { std::fill(this->begin(), this->end(), v); }
 
-    // Conversion
     operator py::object() const
     {
         return py::cast(static_cast<const std::vector<double> &>(*this));
     }
 };
+
+// Helper for rnorm returning a vector
+inline NumericVector rnorm(int n, double mean = 0.0, double sd = 1.0)
+{
+    NumericVector res(n);
+    fill_rnorm(res.data(), n, mean, sd);
+    return res;
+}
 
 // Math Operators
 template <typename Op>
@@ -100,17 +128,6 @@ inline NumericVector log(const NumericVector &v)
     NumericVector res(v.size());
     for (size_t i = 0; i < v.size(); ++i)
         res[i] = std::log(v[i]);
-    return res;
-}
-
-// R replacement: rnorm
-inline NumericVector rnorm(int n, double mean = 0.0, double sd = 1.0)
-{
-    NumericVector res(n);
-    static std::mt19937 gen(42); // Fixed seed for reproducibility in vignette
-    std::normal_distribution<> d(mean, sd);
-    for (int i = 0; i < n; ++i)
-        res[i] = d(gen);
     return res;
 }
 
@@ -235,6 +252,7 @@ struct Named
     Named(const char *n, const NumericMatrix &v) : name(n), value(v) {}
     Named(const char *n, const StringMatrix &v) : name(n), value(v) {}
     Named(const char *n, const NumericVector &v) : name(n), value(v) {}
+    Named(const char *n, const StringVector &v) : name(n), value(v) {}
 };
 struct NamedBuilder
 {
