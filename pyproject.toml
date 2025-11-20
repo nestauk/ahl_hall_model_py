@@ -1,22 +1,30 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core", "pybind11"]
+build-backend = "scikit_build_core.build"
 
-[tool.setuptools]
-packages = ["ahl_hall_model"]
+[tool.scikit-build]
+build.verbose = true
+logging.level = "INFO"
 
 [project]
-name = "ahl_hall_model"
+name = "ahl_hall_model_py"
+authors = [{ name = "Harry Wilde", email = "harry.wilde@nesta.org.uk" }]
 version = "0.1.0"
-description = "A short description of the project."
-authors = [{ name = "Nesta" }]
-license = { text = "MIT" }
-readme = "README.md"
+description = "A Python wrapper for the R `bw` package Hall model C++ implementation"
 requires-python = ">=3.8"
-dependencies = []
+readme = "README.md"
+license = "MIT"
+dependencies = ["matplotlib>=3.7.5", "numpy>=1.24.4"]
+
+[project.urls]
+repository = "https://github.com/nestauk/ahl_hall_model_py"
+issues = "https://github.com/nestauk/ahl_hall_model_py/issues"
 
 [dependency-groups]
 dev = ["ipykernel", "jupytext", "nbstripout", "ruff", "pre-commit"]
+
+[tool.uv]
+package = true
 
 [tool.ruff]
 line-length = 120
@@ -26,7 +34,6 @@ select = [
     "ANN", # flake8-annotations
     "B",   # flake8-bugbear: Likely bugs
     "C",   # flake8-comprehensions and mccabe complexity
-    "D",   # pydocstyle: Docstring conventions
     "E",   # pycodestyle: Errors (default)
     "F",   # pyflakes: Linter
     "I",   # isort
@@ -34,12 +41,11 @@ select = [
     "W",   # pycodestyle: Warnings (default)
 ]
 ignore = [
-    "D100", # Warns about missing module-level docstrings
     "S101", # Warns about assert being removed when compiled
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["ahl_hall_model"]
+known-first-party = ["ahl_hall_model_py"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
